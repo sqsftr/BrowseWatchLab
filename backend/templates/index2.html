@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PBL208</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <header class="navbar">
+    <div class="nav-left">
+      <strong class="brand">RKS208</strong>
+      <nav>
+        <ul>
+          <li><a href="/halaman1">Machine Learning</a></li>
+          <li><a href="/halaman2">Log Monitoring</a></li>
+          <li><a href="/halaman3">Proxy Servering</a></li>
+          <li><a href="/halaman4">Password Hacking</a></li>
+          <li><a href="/halaman5">Activity Monitoring</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="nav-right">
+      <div class="search-wrapper">
+        <input type="text" class="search-input" placeholder="Search..." />
+        <i class="fa fa-search"></i>
+      </div>
+      <button class="icon-btn">
+        <img src="images/pbl.png" alt="pbl" class="rounded-icon" />
+      </button>
+      <button class="icon-btn">
+        <img src="images/logo.png" alt="logo" class="rounded-icon" />
+      </button>
+  </header>
+
+  <main class="main-content">
+    <h1>WELCOME TO</h1>
+    <p>Project Based Learning 208</p>
+    <div class="buttons">
+      <button class="btn btn-primary" onclick="window.location.href='/dashboard'">Dashboard</button>
+    </div>
+  </main>
+
+  <script>
+    function searchTable() {
+      const input = document.querySelector(".search-input").value.toLowerCase();
+      const items = document.querySelectorAll("nav ul li a");
+      items.forEach(item => {
+        if (item.textContent.toLowerCase().includes(input)) {
+          item.style.display = "inline-block";
+        } else {
+          item.style.display = "none";
+        }
+      });
+    }
+  </script>
+</body>
+</html>

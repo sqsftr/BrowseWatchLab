@@ -3,87 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Activity Monitor</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Activity Monitoring</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js"></script>
     <style>
     body {
         background: linear-gradient(to bottom, #000000, #808080);
         color: #ffffff;
         min-height: 100vh;
-        padding-top: 2rem;
+    }
+    .container-wrapper {
+        border: 1px solid #500000;
+        min-height: 100vh;
+        padding: 20px;
+    }
+    .back-button {
+        margin-bottom: 20px;
     }
     .activity-card {
-        background-color: #ffffff;
-        color: #000000;
-        border-radius: 1rem;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-        padding: 1.5rem;
-        margin-bottom: 2rem;
-        width: 100%;
-        max-width: 600px;
-        overflow-wrap: break-word;
-        word-break: break-word;
-        overflow: hidden;
-    }
-    .container-custom {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    .entry-title {
-        font-weight: bold;
-        color: #8B0000;
-    }
-    .toggle-button {
-        margin-top: 1rem;
+        background-color: #f8f9fa;
+        color: #212529;
+        margin-bottom: 15px;
     }
     </style>
 </head>
 <body>
-
-<h1 class="text-center mb-5">Data yang Ditangkap</h1>
-
-<div class="container-custom">
-
-{% if entries %}
-    {% for entry in entries %}
-    <div class="activity-card">
-        <h5>{{ entry.hostname }}</h5>
-
-        <div id="details-{{ loop.index }}" style="display: none;">
-            <p><span class="entry-title">Browser History:</span></p>
-            <ul>
-                {% for history in entry.browser_history %}
-                <li>{{ history }}</li>
+    <div class="container-wrapper">
+    <div class="container">
+        <a href="/" class="btn btn-secondary back-button">
+        <i class="fas fa-arrow-left"></i> Kembali ke Dashboard
+        </a>
+        <h2>Activity Monitoring</h2>
+        
+        {% if entries %}
+        <div class="row">
+        {% for entry in entries %}
+        <div class="col-md-6 mb-4">
+            <div class="card activity-card">
+            <div class="card-body">
+                <h5 class="card-title">User Activity: {{ entry.hostname }}</h5>
+                <p><strong>IP Address:</strong> {{ entry.ip_address }}</p>
+                <p><strong>OS:</strong> {{ entry.os }} {{ entry.os_version }}</p>
+                
+                {% if entry.browser_history is defined %}
+                <h6>Browser History</h6>
+                <ul>
+                {% for item in entry.browser_history %}
+                <li>{{ item }}</li>
                 {% endfor %}
-            </ul>
+                </ul>
+                {% else %}
+                <p>Tidak ada riwayat browser yang tersedia.</p>
+                {% endif %}
+            </div>
+            </div>
         </div>
-
-        <button class="btn btn-outline-primary toggle-button" onclick="toggleDetails('{{ loop.index }}')" id="btn-{{ loop.index }}">Show Details</button>
+        {% endfor %}
+        </div>
+        {% else %}
+        <div class="card">
+        <div class="card-body">
+            <p>Tidak ada data aktivitas yang tersedia.</p>
+        </div>
+        </div>
+        {% endif %}
     </div>
-    {% endfor %}
-{% else %}
-    <p>Tidak ada data yang tersedia.</p>
-{% endif %}
+    </div>
 
-</div>
+    <script>
 
-<script>
-function toggleDetails(index) {
-    const details = document.getElementById('details-' + index);
-    const button = document.getElementById('btn-' + index);
+    const socket = io();
+    
 
-    if (details.style.display === 'none') {
-        details.style.display = 'block';
-        button.innerText = 'Hide Details';
-    } else {
-        details.style.display = 'none';
-        button.innerText = 'Show Details';
-    }
-}
-</script>
+    socket.on('new_data', function(data) {
+        console.log('New data received:', data);
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-
+        location.reload();
+    });
+    </script>
 </body>
 </html>
